@@ -13,11 +13,11 @@
     "fastclick": "1.0.6",
     "hammerjs": "2.0.4",
     "immutable": "3.6.2",
-    "intl": "0.1.4",
     "iscroll": "5.1.3",
     "page": "1.6.0",
     "react": "0.13.1",
     "react-tween-state": "0.0.4",
+    "react-intl": "1.2.0",
     "socket.io-client": "1.3.3",
     "superagent": "1.1.0",
     "utf8": "2.1.0"
