@@ -88,6 +88,11 @@ export default React.createClass({
 			}
 		});
 
+		this.draggable.on('dragStart', () => {
+			this.setState({moveScale: this.props.scale})
+
+		});
+
 	},
 
 	componentWillUnmount() {

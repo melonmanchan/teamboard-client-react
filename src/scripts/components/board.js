@@ -43,16 +43,6 @@ export default React.createClass({
 			//let xOffset = event.center.x  - (this.props.offset.x * this.props.scale);
 			//let yOffset = event.center.y  - (this.props.offset.y * this.props.scale);
 
-
-			console.clear();
-			console.log("Scale: " + this.props.scale);
-			console.log("Event x: " + event.center.x);
-			console.log("Event y: " + event.center.y);
-			console.log("Offset x: " +this.props.offset.x );
-			console.log("Offset y: " +this.props.offset.y );
-			console.log("CalcX: " + xOffset);
-			console.log("CalcY: " + yOffset);
-
 			let position = {
 				x: xOffset - (Ticket.Width  / 2),
 				y: yOffset - (Ticket.Height / 2)
@@ -119,7 +109,8 @@ export default React.createClass({
 		return this.props.board.tickets.map((ticket) => {
 			return (
 				<TicketComponent key={ticket.id} snap={this.props.snap}
-					board={this.props.board.id} ticket={ticket} />
+					board={this.props.board.id} ticket={ticket}
+					scale={this.props.scale}/>
 			);
 		});
 	}

@@ -55,28 +55,21 @@ export default React.createClass({
 
 		// Keep track of the scroll position, which is transferred via 'props'
 		// to the 'scrollable' element.
-		this.scroller.on('scrollEnd', () => {
-			// TODO Do we need to try and reuse the same object reference? This
-			//      could probably prevent some unnecessary re-renders.
-			this.setState({
-				offset: { x: this.scroller.x, y: this.scroller.y },
-				scale: this.scroller.scale
-			});
-
-		});
-
-		this.scroller.on('zoomEnd', () => {
-			// TODO Do we need to try and reuse the same object reference? This
-			//      could probably prevent some unnecessary re-renders.
-			this.setState({
-				offset: { x: this.scroller.x, y: this.scroller.y },
-				scale: this.scroller.scale
-			});
-
-		});
+		this.scroller.on('scrollEnd', this.updateState);
+		this.scroller.on('zoomStart', this.calculateZoom);
+		this.scroller.on('zoomEnd',   this.calculateZoom);
 
 	},
-
+	calculateZoom() {
+		this.updateState();
+		this.resizeMinimapCursor();
+	},
+	updateState() {
+		this.setState({
+			offset: { x: this.scroller.x, y: this.scroller.y },
+			scale: this.scroller.scale
+		});
+	},
 	componentWillUnmount() {
 		this.scroller.destroy();
 		this.scroller = null;
@@ -96,7 +89,6 @@ export default React.createClass({
 		// If the size of the board changes, we need to refresh the scroller.
 		let deltaWidth  = prevsize.width  - nextsize.width;
 		let deltaHeight = prevsize.height - nextsize.height;
-
 		if(deltaWidth !== 0 || deltaHeight !== 0) {
 			return this.resizeMinimapCursor();
 		}
@@ -110,8 +102,8 @@ export default React.createClass({
 	resizeMinimapCursor() {
 		if(this.props.minimap) {
 			this.refs.minimap.resizeCursor({
-				width:  this.getDOMNode().clientWidth,
-				height: this.getDOMNode().clientHeight
+				width:  this.getDOMNode().clientWidth  * (1/this.state.scale),
+				height: this.getDOMNode().clientHeight * (1/this.state.scale)
 			});
 		}
 		return this.scroller.refresh();
