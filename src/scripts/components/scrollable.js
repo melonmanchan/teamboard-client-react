@@ -1,5 +1,5 @@
 import React   from 'react/addons';
-import IScroll from 'iscroll';
+import IScroll from 'iscroll/build/iscroll-zoom';
 
 import Board   from '../models/board';
 import Minimap from '../components/minimap';
@@ -23,7 +23,7 @@ export default React.createClass({
 	},
 
 	getInitialState() {
-		return { offset: { x: 0, y: 0 } }
+		return { offset: { x: 0, y: 0 }, scale: 1 }
 	},
 
 	componentDidMount() {
@@ -33,6 +33,11 @@ export default React.createClass({
 			scrollX:    true,
 			scrollY:    true,
 			freeScroll: true,
+			zoom: true,
+			mouseWheel: true,
+			wheelAction: 'zoom',
+			zoomMax: 5,
+			zoomMin: 0.5,
 			indicators: {
 				el:          this.refs.minimap.getDOMNode(),
 				shrink:      false,
@@ -56,7 +61,19 @@ export default React.createClass({
 			this.setState({
 				offset: { x: this.scroller.x, y: this.scroller.y }
 			});
+
 		});
+
+		this.scroller.on('zoomEnd', () => {
+			// TODO Do we need to try and reuse the same object reference? This
+			//      could probably prevent some unnecessary re-renders.
+			//this.setState({ zoom: this.scroller.scale });
+			this.setState({
+				scale: this.scroller.scale
+			});
+
+		});
+
 	},
 
 	componentWillUnmount() {
@@ -100,11 +117,12 @@ export default React.createClass({
 	},
 
 	render() {
+		console.log(this.state.scale);
 		let props = {
 			minimap: {
 				show:          this.props.minimap,
 				board:         this.props.board,
-				isTicketSized: true
+				isTicketSized: false
 			}
 		}
 		return (
