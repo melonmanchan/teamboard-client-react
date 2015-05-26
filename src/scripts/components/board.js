@@ -37,10 +37,27 @@ export default React.createClass({
 			// an 'offset' property.
 			// If the user has enabled snapping, we also need to make sure to
 			// snap the position to a grid.
+			let xOffset = (event.center.x  - (this.props.offset.x)) / this.props.scale;
+			let yOffset = (event.center.y  - (this.props.offset.y)) / this.props.scale;
+
+			//let xOffset = event.center.x  - (this.props.offset.x * this.props.scale);
+			//let yOffset = event.center.y  - (this.props.offset.y * this.props.scale);
+
+
+			console.clear();
+			console.log("Scale: " + this.props.scale);
+			console.log("Event x: " + event.center.x);
+			console.log("Event y: " + event.center.y);
+			console.log("Offset x: " +this.props.offset.x );
+			console.log("Offset y: " +this.props.offset.y );
+			console.log("CalcX: " + xOffset);
+			console.log("CalcY: " + yOffset);
+
 			let position = {
-				x: (event.center.x - this.props.offset.x) - (Ticket.Width  / 2),
-				y: (event.center.y - this.props.offset.y) - (Ticket.Height / 2)
+				x: xOffset - (Ticket.Width  / 2),
+				y: yOffset - (Ticket.Height / 2)
 			}
+
 			position = this.props.snap ? gridify(position) : position;
 
 			// Finally we need to clamp the position so that it does not go

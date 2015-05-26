@@ -36,8 +36,8 @@ export default React.createClass({
 			zoom: true,
 			mouseWheel: true,
 			wheelAction: 'zoom',
-			zoomMax: 5,
-			zoomMin: 0.5,
+			zoomMax: 2,
+			zoomMin: 0.4,
 			indicators: {
 				el:          this.refs.minimap.getDOMNode(),
 				shrink:      false,
@@ -59,7 +59,8 @@ export default React.createClass({
 			// TODO Do we need to try and reuse the same object reference? This
 			//      could probably prevent some unnecessary re-renders.
 			this.setState({
-				offset: { x: this.scroller.x, y: this.scroller.y }
+				offset: { x: this.scroller.x, y: this.scroller.y },
+				scale: this.scroller.scale
 			});
 
 		});
@@ -67,8 +68,8 @@ export default React.createClass({
 		this.scroller.on('zoomEnd', () => {
 			// TODO Do we need to try and reuse the same object reference? This
 			//      could probably prevent some unnecessary re-renders.
-			//this.setState({ zoom: this.scroller.scale });
 			this.setState({
+				offset: { x: this.scroller.x, y: this.scroller.y },
 				scale: this.scroller.scale
 			});
 
@@ -117,7 +118,6 @@ export default React.createClass({
 	},
 
 	render() {
-		console.log(this.state.scale);
 		let props = {
 			minimap: {
 				show:          this.props.minimap,
@@ -140,7 +140,8 @@ export default React.createClass({
 	renderScrollableElement() {
 		return React.Children.map(this.props.children, (child) => {
 			return React.addons.cloneWithProps(child, {
-				offset: this.state.offset
+				offset: this.state.offset,
+				scale:  this.state.scale
 			});
 		});
 	}
