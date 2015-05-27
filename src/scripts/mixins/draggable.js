@@ -7,33 +7,53 @@ import Draggable from 'draggabilly';
 export default {
 	getInitialState() {
 		return { isDragging: false,
-		         moveScale:  1}
+		         moveScale:  1 }
 	},
 
 	componentDidMount() {
 		this.draggable = new Draggable(this.getDOMNode(), {
 			containment: true
 		});
+
 		this.draggable.on('dragStart', (draggable, event) => {
 			this.setState({ isDragging: true,
-			startPos: {x:this.draggable.position.x,y:this.draggable.position.y} });
+							startPos: {
+								x: this.draggable.position.x,
+								y: this.draggable.position.y
+									  } });
+
 			return event.stopPropagation();
 		});
+
 		this.draggable.on('dragEnd', () => {
 			this.setState({ isDragging: false });
 		});
 
-		this.draggable.on('dragMove', (event, pointer, moveVector) => {
-			console.log(this.state.moveScale);
+		this.draggable.on('dragMove', (pointer, event, moveVector) => {
 
-			let changeX = this.draggable.position.x - this.state.startPos.x;
-			let changeY = this.draggable.position.y - this.state.startPos.y;
+			if (this.state.moveScale != 1) {
 
-			let newX = this.state.startPos.x + changeX /this.state.moveScale;
-			let newY = this.state.startPos.y + changeY /this.state.moveScale;
+				if(this.draggable.position.x >= this.props.moveArea.width * 192)
+				{
+					this.draggable.position.x = (this.props.moveArea.width * 192) - 192;
+				} else {
+					let changeX = this.draggable.position.x - this.state.startPos.x;
+					let newX = this.state.startPos.x + changeX / this.state.moveScale;
+					this.draggable.position.x = newX;
+				}
 
-			this.draggable.position.x = newX;
-			this.draggable.position.y = newY;
+				if(this.draggable.position.y >= this.props.moveArea.height * 108)
+				{
+					this.draggable.position.y = (this.props.moveArea.height * 108) - 108;
+				} else {
+					let changeY = this.draggable.position.y - this.state.startPos.y;
+					let newY = this.state.startPos.y + changeY / this.state.moveScale;
+					this.draggable.position.y = newY;
+				}
+				console.clear();
+			}
+			console.log(this.props.moveArea);
+			return event.stopPropagation();
 
 		});
 	},

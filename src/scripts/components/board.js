@@ -110,7 +110,7 @@ export default React.createClass({
 			return (
 				<TicketComponent key={ticket.id} snap={this.props.snap}
 					board={this.props.board.id} ticket={ticket}
-					scale={this.props.scale}/>
+					scale={this.props.scale} moveArea={this.props.board.size}/>
 			);
 		});
 	}
