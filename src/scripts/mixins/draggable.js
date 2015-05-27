@@ -12,7 +12,7 @@ export default {
 
 	componentDidMount() {
 		this.draggable = new Draggable(this.getDOMNode(), {
-			containment: true
+			containment: false
 		});
 
 		this.draggable.on('dragStart', (draggable, event) => {
@@ -30,29 +30,29 @@ export default {
 		});
 
 		this.draggable.on('dragMove', (pointer, event, moveVector) => {
+				let maxY = (this.props.moveArea.height * 108) - 108;
+				let maxX = (this.props.moveArea.width * 192) - 192;
 
-			if (this.state.moveScale != 1) {
-
-				if(this.draggable.position.x >= this.props.moveArea.width * 192)
+				if(this.draggable.position.x >= maxX)
 				{
-					this.draggable.position.x = (this.props.moveArea.width * 192) - 192;
+					this.draggable.position.x = maxX;
+
 				} else {
 					let changeX = this.draggable.position.x - this.state.startPos.x;
 					let newX = this.state.startPos.x + changeX / this.state.moveScale;
 					this.draggable.position.x = newX;
 				}
 
-				if(this.draggable.position.y >= this.props.moveArea.height * 108)
+				if(this.draggable.position.y >=maxY)
 				{
-					this.draggable.position.y = (this.props.moveArea.height * 108) - 108;
+					this.draggable.position.y =maxY;
+
 				} else {
 					let changeY = this.draggable.position.y - this.state.startPos.y;
 					let newY = this.state.startPos.y + changeY / this.state.moveScale;
 					this.draggable.position.y = newY;
 				}
 				console.clear();
-			}
-			console.log(this.props.moveArea);
 			return event.stopPropagation();
 
 		});
